@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Notes.Anotations;
 using Notes.DataTransfer.Input.CollectionDataTransfer;
 using Notes.Domain;
 using Notes.Pagination;
@@ -9,12 +10,13 @@ using Notes.Repository.Collections;
 namespace Notes.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("[controller]")]
 public class CollectionsController(ICollectionsRepository collectionsRepository) : ControllerBase
 {
     private readonly ICollectionsRepository _collectionsRepository = collectionsRepository;
 
+    [IsActiveUser]
     [HttpPost("create-collection/{authorId}")]
     public async Task<IActionResult> CreateCollection([FromBody] CollectionInputInclude model, string authorId)
     {

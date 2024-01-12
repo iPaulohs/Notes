@@ -9,11 +9,10 @@ namespace Notes.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public partial class AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration, NotesDbContext context, RoleManager<User> roleManager) : ControllerBase
+public partial class AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration, NotesDbContext context) : ControllerBase
 {
     private readonly UserManager<User> _userManager = userManager;
     private readonly SignInManager<User> _signInManager = signInManager;
-    private readonly RoleManager<User> _roleManager = roleManager;
     private readonly IConfiguration _configuration = configuration;
     private readonly NotesDbContext _context = context;
 
@@ -35,7 +34,7 @@ public partial class AuthController(UserManager<User> userManager, SignInManager
             Name = userInput.Name,
             Email = userInput.Email,
             UserName = userInput.UserName,
-            BirthDate = userInput.BirthDate
+            BirthDate = new DateOnly(year: userInput.BirthDate.Year, month: userInput.BirthDate.Month, day: userInput.BirthDate.Day)
         };
 
 
@@ -139,6 +138,11 @@ public partial class AuthController(UserManager<User> userManager, SignInManager
             return BadRequest("Usuário não encontado.");
         }
 
+        if(user.IsActive == false)
+        {
+            return BadRequest("Usuário já está desativado.");
+        }
+
         var password = await _userManager.CheckPasswordAsync(user, userInput.Password);
 
         if(password != true)
@@ -148,8 +152,8 @@ public partial class AuthController(UserManager<User> userManager, SignInManager
 
         try
         {
-            user.IsActive = true;
-            user.InactivationDate = null;
+            user.IsActive = false;
+            user.InactivationDate = DateTime.Now;
             await _context.SaveChangesAsync();
             return Ok("Conta inativada com sucesso.");
         }

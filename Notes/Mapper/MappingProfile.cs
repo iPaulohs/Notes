@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
-using Notes.DataTransfer.Output.NoteDataTranferOutput;
+using Notes.DataTransfer.Output.NoteDataTransferOutput;
 using Notes.Domain;
 
-namespace Notes.Mapper
+namespace Notes.Mapper;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Profile
+    public MappingProfile() 
     {
-        public MappingProfile() 
-        {
-            CreateMap<Note, NoteOutputFree>();
-        }
+        CreateMap<Note, NoteOutput>();
     }
 }

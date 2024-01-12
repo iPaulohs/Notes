@@ -4,7 +4,6 @@ using Notes.DataTransfer.Input.CollectionDataTransfer;
 using Notes.Domain;
 using Notes.Identity;
 using Notes.Pagination;
-using static Azure.Core.HttpHeader;
 
 namespace Notes.Repository.Collections;
 
@@ -30,7 +29,8 @@ public class CollectionsRepository(NotesDbContext context, ILogger<CollectionsRe
             {
                 Title = _collectionInput.Title,
                 Description = _collectionInput.Description,
-                Author = user.Id
+                Author = user.Id,
+                CreationDate = DateTime.UtcNow
             };
 
             try

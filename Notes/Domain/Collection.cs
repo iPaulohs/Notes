@@ -15,4 +15,6 @@ public class Collection
 
     [Required]
     public string? Author { get; set; }
+
+    public DateTime? CreationDate { get; set; }
 }

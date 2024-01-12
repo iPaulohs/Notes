@@ -18,4 +18,8 @@ public class Note
 
     [Required]
     public int Collection { get; set; }
+
+    public DateTime? CreationDate { get; set; }
+
+    public DateTime? FinalDate { get; set; }
 }

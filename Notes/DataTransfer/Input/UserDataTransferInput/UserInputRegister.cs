@@ -10,5 +10,5 @@ public record UserInputRegister
 
     public string? Password { get; set; }
 
-    public DateTime BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
 }

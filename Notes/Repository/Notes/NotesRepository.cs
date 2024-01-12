@@ -1,15 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Notes.DataTransfer.Input.NoteDataTransferInput;
+using Notes.DataTransfer.Output.NoteDataTransferOutput;
 using Notes.Domain;
 using Notes.Identity;
 using Notes.Pagination;
 
 namespace Notes.Repository.Notes;
 
-public class NotesRepository(NotesDbContext context, ILogger<NotesRepository> logger) : INotesRepository
+public class NotesRepository(NotesDbContext context, ILogger<NotesRepository> logger, IMapper mapper) : INotesRepository
 {
     private readonly NotesDbContext _context = context;
     private readonly ILogger _logger = logger;
+    private readonly IMapper _mapper = mapper;
 
     public async Task CreateNoteAsync(NoteInputInclude _noteInput, string authorId)
     {
@@ -36,7 +39,9 @@ public class NotesRepository(NotesDbContext context, ILogger<NotesRepository> lo
                     Author = authorId,
                     Title = _noteInput.Title,
                     Description = _noteInput.Description,
-                    Collection = _noteInput.CollectionId
+                    Collection = _noteInput.CollectionId,
+                    CreationDate = DateTime.UtcNow,
+                    FinalDate = _noteInput.FinalDate
                 };
 
                 try
@@ -88,25 +93,23 @@ public class NotesRepository(NotesDbContext context, ILogger<NotesRepository> lo
         }
     }
 
-    public async Task<PagedList<Note>> GetAllNotesAsync(string authorId, int collectionId, Parameters<Note> parameters)
+    public async Task<PagedList<NoteOutput>> GetAllNotesAsync(string authorId, int collectionId, Parameters<Note> parameters)
     {
-        //TODO Corrigir o retorno e mapear as notas para NoteOutputFree
         var notes = await _context.Notes
             .Where(x => x.Author == authorId && x.Collection == collectionId)
             .OrderBy(x => x.Title)
             .ToListAsync();
 
-        return PagedList<Note>.ToPagedList(notes, parameters.PageNumber, parameters.PageSize);
+        return PagedList<NoteOutput>.ToPagedList(_mapper.Map<List<NoteOutput>>(notes), parameters.PageNumber, parameters.PageSize);
     }
 
-    public async Task<PagedList<Note>> GetNoteByTitleAsync(string searchTerm, string authorId, Parameters<Note> parameters)
+    public async Task<PagedList<NoteOutput>> GetNoteByTitleAsync(string searchTerm, string authorId, Parameters<Note> parameters)
     {
-        return PagedList<Note>.ToPagedList(await _context.Notes.Where(x => x.Title.ToLower().Contains(searchTerm.ToLower()) )
+        var notes = await _context.Notes.Where(x => x.Title.ToLower().Contains(searchTerm.ToLower()))
             .OrderBy(x => x.Title)
             .Skip((parameters.PageNumber - 1) * parameters.PageSize)
             .Take(parameters.PageSize)
-            .ToListAsync(),
-            parameters.PageNumber,
-            parameters.PageSize);
+            .ToListAsync();
+        return PagedList<NoteOutput>.ToPagedList(_mapper.Map<List<NoteOutput>>(notes), parameters.PageNumber,parameters.PageSize);
     }
 }

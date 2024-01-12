@@ -3,11 +3,8 @@ using Notes.Domain;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Security.Cryptography;
 using Notes.DataTransfer.Output.Token;
 
-
-//TODO Realizar a implantação de Roles para o usuário inativo, para que ele não consiga acessar os métodos de collections/notes.
 
 namespace Notes.Controllers;
 

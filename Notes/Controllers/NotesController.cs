@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Notes.Anotations;
 using Notes.DataTransfer.Input.NoteDataTransferInput;
 using Notes.Domain;
 using Notes.Pagination;
@@ -11,12 +11,13 @@ using System.Text.Json;
 namespace Notes.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 [Route("[Controller]")]
 public class NotesController(INotesRepository notesRepository) : ControllerBase
 {
     private readonly INotesRepository _notesRepository = notesRepository;
 
+    [IsActiveUser]
     [HttpPost("create-note/{authorId}")]
     public async Task<IActionResult> CreateNote([FromBody] NoteInputInclude model, string authorId)
     {
@@ -42,7 +43,7 @@ public class NotesController(INotesRepository notesRepository) : ControllerBase
 
         if (notes == null)
         {
-            return NotFound("Nenhuma coleção encontrada.");
+            return NotFound("Nenhuma nota encontrada.");
         }
         else
         {

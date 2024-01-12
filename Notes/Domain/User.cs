@@ -11,7 +11,7 @@ public class User : IdentityUser
 
     [PersonalData]
     [Required]
-    public DateTime BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
 
     [EmailAddress]
     [Required]
@@ -25,6 +25,4 @@ public class User : IdentityUser
     public bool IsActive { get; set; } = true;
 
     public DateTime? InactivationDate { get; set; } = null;
-
-    public bool IsPremium { get; set; } = false;
 }
