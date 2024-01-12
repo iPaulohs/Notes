@@ -5,7 +5,10 @@ using System.Security.Claims;
 using System.Text;
 using Notes.DataTransfer.Output.Token;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2537bb1d14a80078e99313883c95dd51bb0392b9
 namespace Notes.Controllers;
 
 public partial class AuthController
