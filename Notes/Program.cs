@@ -12,7 +12,7 @@ using Notes.Mapper;
 using Notes.Repository.Collections;
 using Notes.Repository.Notes;
 using Notes.Services;
-using Notes.Validations;
+using Notes.Validations.Input;
 using System.Net.WebSockets;
 using System.Text;
 

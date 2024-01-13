@@ -36,8 +36,8 @@ public class NotesController(INotesRepository notesRepository) : ControllerBase
         }
     }
 
-    [HttpGet("get-all/{authorId}/{collectionId}")]
-    public async Task<IActionResult> GetAll(string authorId, int collectionId, [FromQuery] Parameters<Note> parameters)
+    [HttpGet("get-all/{authorId}/{collectionId:int:min(1}}")]
+    public async Task<IActionResult> GetAll(string authorId, int collectionId, [FromRoute] Parameters<Note> parameters)
     {
         var notes = await _notesRepository.GetAllNotesAsync(authorId, collectionId, parameters);
 
@@ -64,7 +64,7 @@ public class NotesController(INotesRepository notesRepository) : ControllerBase
     }
 
     [HttpGet("get-term/{authorId}/{searchTerm}")]
-    public async Task<IActionResult> GetAllBySearchTerm(string searchTerm, string authorId, [FromQuery] Parameters<Note> parameters)
+    public async Task<IActionResult> GetAllBySearchTerm(string searchTerm, string authorId, [FromRoute] Parameters<Note> parameters)
     {
         var notes = await _notesRepository.GetNoteByTitleAsync(searchTerm, authorId, parameters);
 
@@ -88,7 +88,7 @@ public class NotesController(INotesRepository notesRepository) : ControllerBase
         }
     }
 
-    [HttpPut("edit-note/{noteId}")]
+    [HttpPut("edit-note/{noteId:int:min(1}")]
     public async Task<IActionResult> EditNote(int noteId, [FromBody] NoteInputUpdate model)
     {
         try
@@ -106,7 +106,7 @@ public class NotesController(INotesRepository notesRepository) : ControllerBase
         }
     }
 
-    [HttpDelete("delete-note/{noteId}")]
+    [HttpDelete("delete-note/{noteId:int:min(1}")]
     public async Task<IActionResult> DeleteNote(int noteId)
     {
         try

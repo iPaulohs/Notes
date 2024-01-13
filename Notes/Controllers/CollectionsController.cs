@@ -36,7 +36,7 @@ public class CollectionsController(ICollectionsRepository collectionsRepository)
     }
 
     [HttpGet("get-all/{authorId}")]
-    public async Task<IActionResult> GetAll(string authorId, [FromQuery] Parameters<Collection> parameters)
+    public async Task<IActionResult> GetAll(string authorId, [FromRoute] Parameters<Collection> parameters)
     {
         List<Collection> collections = await _collectionsRepository.GetAllCollectionsAsync(authorId, parameters);
 
@@ -51,7 +51,7 @@ public class CollectionsController(ICollectionsRepository collectionsRepository)
     }
 
     [HttpGet("get-term/{authorId}/{searchTerm}")]
-    public async Task<IActionResult> GetAllBySearchTerm(string searchTerm, string authorId, [FromQuery] Parameters<Collection> parameters)
+    public async Task<IActionResult> GetAllBySearchTerm(string searchTerm, string authorId, [FromRoute] Parameters<Collection> parameters)
     { 
         List<Collection> collections = await _collectionsRepository.GetCollectionByTitleAsync(searchTerm, authorId, parameters);
         
@@ -65,7 +65,7 @@ public class CollectionsController(ICollectionsRepository collectionsRepository)
         }
     }
 
-    [HttpPut("edit-collection/{collectionId}")]
+    [HttpPut("edit-collection/{collectionId:int:min(1)}")]
     public async Task<IActionResult> EditCollection(CollectionInputUpdate model, int collectionId)
     {
         try
@@ -83,7 +83,7 @@ public class CollectionsController(ICollectionsRepository collectionsRepository)
         }
     }
 
-    [HttpDelete("delete-collection/{collectionId}")]
+    [HttpDelete("delete-collection/{collectionId:int:min(1)}")]
     public async Task<IActionResult> DeleteCollection(int collectionId)
     {
         try
